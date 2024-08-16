@@ -1,14 +1,14 @@
 def print_banner():
     banner = """
-#=====================================================================================#
-#    _____                 ___ _        ____  _                   _    _____     _
-#   |  _  |___ ___ ___ _ _|  _| |_ _   |    \|_|___ ___ ___ ___ _| |  | __  |___| |_
-#   |   __| -_|  _|  _| | |  _| | | |  |  |  | |_ -|  _| . |  _| . |  | __ -| . |  _|
-#   |__|  |___|_| |_| |_  |_| |_|___|  |____/|_|___|___|___|_| |___|  |_____|___|_|
-#                     |___|
-#
-#                                 Developed by perryhu
-#=====================================================================================#
+=========================================================================================
+     _____                 ___ _        ____  _                   _    _____     _
+    |  _  |___ ___ ___ _ _|  _| |_ _   |    \|_|___ ___ ___ ___ _| |  | __  |___| |_
+    |   __| -_|  _|  _| | |  _| | | |  |  |  | |_ -|  _| . |  _| . |  | __ -| . |  _|
+    |__|  |___|_| |_| |_  |_| |_|___|  |____/|_|___|___|___|_| |___|  |_____|___|_|
+                      |___|
+
+                                  Developed by perryhu
+=========================================================================================
 """
     print(banner)
 
@@ -19,10 +19,15 @@ import os
 
 import discord
 from discord.ext import commands, tasks
+from itertools import cycle
 
 from dotenv import load_dotenv
 
+import asyncio
+
+import time
 import datetime
+import aiohttp
 
 from dataclasses import dataclass
 import random
@@ -61,6 +66,15 @@ bot = commands.Bot(command_prefix="/", intents=discord.Intents.all())
 WORKFLY_USER_ID = 757614271030100028
 HTTPS_USER_ID = 784442224930324501
 
+EMBEDS_COLOR = 0x7a450c
+
+#Add advertisements and things you want people to see later
+bot_status = cycle(["/help", "https://", "foo", "bar"])
+
+# @tasks.loop(seconds=5)
+# async def change_status():
+#    await bot.change_presence(activity=discord.Game(next(bot_status)))
+
 #BOOT_UP INITIAL MESSAGE
 @bot.event
 async def on_ready():
@@ -77,8 +91,11 @@ async def on_ready():
     )
 
     #List members in Guild
-    members = '\n-'.join([member.name for member in guild.members])
+    members = '\n- '.join([member.name for member in guild.members])
     print(f'\nGuild Members:\n- {members}')
+
+    #change_status.start()
+    await bot.change_presence(activity=discord.Game("/help"))
 
     channel = bot.get_channel(CHANNEL_ID) #text-channel #bot-dev
     #First Message when booted up
@@ -133,6 +150,56 @@ async def stop(ctx):
     await ctx.send(f"Session ended after {duration} seconds.")
 
 
+#PING COMMAND TEST FOR LATENCY (ms)
+@bot.command()
+async def ping(ctx):
+    start_time = time.time()
+    message = await ctx.send("Pinging...")
+
+    #calculate latency
+    end_time = time.time()
+    latency = (end_time - start_time) * 1000 #convert to ms
+
+    #Edit message to include latency
+    await message.edit(content=f"Pong! Ping: {int(latency)} ms")
+
+
+#LATENCY TEST COMMAND
+@bot.command()
+async def latency(ctx):
+    #Gateway API Latency (=ping)
+    gateway_latency = round(bot.latency * 1000)
+
+    #REST API Latency
+    url = "https://jsonplaceholder.typicode.com/todos/1" #Random link???
+    async with aiohttp.ClientSession() as session:
+        start_time = time.time()
+        async with session.get(url) as response:
+            end_time = time.time()
+            rest_latency = round((end_time - start_time) * 1000)
+
+    await ctx.send(f'Gateway Latency: {gateway_latency} ms \nREST API Latency: {rest_latency} ms')
+
+
+@bot.command()
+async def test(ctx):
+    embed = discord.Embed(
+        title = "Perryflu Help Page",
+        description = """
+        ### Other Commands
+        - **/ping** - Get the ping of the bot
+        - **/latency** - Details on latency of bot
+        - **/start** - to remove
+        - **/stop** - to remove
+        - **/hello** - to remove say hello back
+        - **/add** - adds numbers together (to remove)
+        """,
+        color = EMBEDS_COLOR
+    )
+
+    await ctx.send(embed=embed)
+
+
 
 # ================================
 # Event Handling
@@ -169,7 +236,7 @@ async def on_message(message):
 # ================================
 @bot.event
 async def on_error(event, *args, **kwargs):
-    #use 'cat err.log' to access logs 
+    #use 'cat err.log' to access logs
     with open('err.log', 'a') as f:
         #check if event that caused error was 'on_message'
         if event == 'on_message':
