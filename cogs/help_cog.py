@@ -15,7 +15,7 @@ class HelpCog(commands.Cog):
             title = "Perryflu Help Page",
             description = """
             ### Commands
-            - **/help** - Show this help page
+            - **/helpme** - Show this help page
             - **/ping** - Get the ping of the bot
             - **/latency** - Details on latency of bot
             - **/start** - Start a session
