@@ -43,7 +43,7 @@ HTTPS_USER_ID = int(os.getenv("HTTPS_USER_ID"))
 #DEFINE BOT PREFIX
 bot = commands.Bot(command_prefix="/", intents=discord.Intents.all())
 
-bot_status = cycle(["/help", "Dev: perryhu09", "foo", "bar"])
+bot_status = cycle(["/helpme") #add more status' to cycle later
 
 @tasks.loop(seconds=5)
 async def change_status():
