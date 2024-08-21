@@ -16,6 +16,7 @@ class HelpCog(commands.Cog):
             description = """
             ### Commands
             - **/helpme** - Show this help page
+            - **/timer {seconds}** - sets a timer for specified number of seconds
             - **/ping** - Get the ping of the bot
             - **/latency** - Details on latency of bot
             - **/start** - Start a session
