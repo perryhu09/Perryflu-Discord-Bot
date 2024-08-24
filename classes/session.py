@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 
+
 @dataclass
 class Session:
     is_active: bool = False
