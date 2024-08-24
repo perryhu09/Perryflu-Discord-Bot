@@ -19,6 +19,7 @@ class HelpCog(commands.Cog):
             - **/timer {seconds}** - sets a timer for specified number of seconds
             - **/ping** - Get the ping of the bot
             - **/latency** - Details on latency of bot
+            - **/userinfo** - Get information on a specific user
             - **/start** - Start a session
             - **/stop** - Stop current session
             """,
