@@ -20,8 +20,6 @@ class HelpCog(commands.Cog):
             - **/ping** - Get the ping of the bot
             - **/latency** - Details on latency of bot
             - **/userinfo** - Get information on a specific user
-            - **/start** - Start a session
-            - **/stop** - Stop current session
             """,
             color = EMBEDS_COLOR
         )
