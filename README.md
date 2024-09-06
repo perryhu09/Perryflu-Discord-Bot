@@ -1,1 +1,1 @@
-Discord Bot
+Discord Bot made for fun 
